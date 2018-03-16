@@ -1,6 +1,6 @@
 #!/bin/env sh
 
-SRCDIR=/opt/app/src
+SRCDIR=./
 
 _log() {
   echo "--- '$*' ---"
