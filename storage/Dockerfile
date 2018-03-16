@@ -12,6 +12,8 @@ EXPOSE 9090
 
 RUN mkdir /opt/Users
 
+RUN chgrp -Rh root /var/log/samba
+
 USER 1001
 
 CMD ["sh", "-c", "smbd -D; nmbd -D; /opt/plaza/plaza"]
