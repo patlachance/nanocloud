@@ -12,4 +12,6 @@ EXPOSE 9090
 
 RUN mkdir /opt/Users
 
+USER 1001
+
 CMD ["sh", "-c", "smbd -D; nmbd -D; /opt/plaza/plaza"]
