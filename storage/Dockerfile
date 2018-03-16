@@ -12,7 +12,8 @@ EXPOSE 9090
 
 RUN mkdir /opt/Users
 
-RUN chgrp -Rh root /var/log/samba
+RUN chgrp -Rh root /var/log/samba && \
+    chmod g+rwx /var/log/samba
 
 USER 1001
 
