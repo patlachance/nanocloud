@@ -1,0 +1,954 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: backend
+    name: backend
+  spec:
+    clusterIP: None
+    ports:
+    - name: headless
+      port: 55555
+      targetPort: 0
+    selector:
+      io.kompose.service: backend
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: frontend
+    name: frontend
+  spec:
+    clusterIP: None
+    ports:
+    - name: headless
+      port: 55555
+      targetPort: 0
+    selector:
+      io.kompose.service: frontend
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: guacamole-client
+    name: guacamole-client
+  spec:
+    clusterIP: None
+    ports:
+    - name: headless
+      port: 55555
+      targetPort: 0
+    selector:
+      io.kompose.service: guacamole-client
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: guacd
+    name: guacd
+  spec:
+    clusterIP: None
+    ports:
+    - name: headless
+      port: 55555
+      targetPort: 0
+    selector:
+      io.kompose.service: guacd
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: plaza
+    name: plaza
+  spec:
+    clusterIP: None
+    ports:
+    - name: headless
+      port: 55555
+      targetPort: 0
+    selector:
+      io.kompose.service: plaza
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: postgres
+    name: postgres
+  spec:
+    clusterIP: None
+    ports:
+    - name: headless
+      port: 55555
+      targetPort: 0
+    selector:
+      io.kompose.service: postgres
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: proxy
+    name: proxy
+  spec:
+    ports:
+    - name: "80"
+      port: 80
+      targetPort: 80
+    - name: "443"
+      port: 443
+      targetPort: 443
+    selector:
+      io.kompose.service: proxy
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: storage
+    name: storage
+  spec:
+    ports:
+    - name: "445"
+      port: 445
+      targetPort: 445
+    - name: "9090"
+      port: 9090
+      targetPort: 9090
+    selector:
+      io.kompose.service: storage
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: backend
+    name: backend
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: backend
+    strategy:
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: backend
+      spec:
+        containers:
+        - image: ' '
+          name: backend
+          resources: {}
+          volumeMounts:
+          - mountPath: /opt/back/assets/dist
+            name: data-static
+        restartPolicy: Always
+        volumes:
+        - name: data-static
+          persistentVolumeClaim:
+            claimName: data-static
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - backend
+        from:
+          kind: ImageStreamTag
+          name: backend:latest
+      type: ImageChange
+  status: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: backend
+    name: backend
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: nanocloud/backend
+      generation: null
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: backend
+    name: backend
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: backend:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        ref: master
+        uri: https://github.com/patlachance/nanocloud.git
+      type: Git
+    strategy:
+      dockerStrategy:
+        dockerfilePath: Dockerfile
+      type: Docker
+    triggers:
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: frontend
+    name: frontend
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: frontend
+    strategy:
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: frontend
+      spec:
+        containers:
+        - image: ' '
+          name: frontend
+          resources: {}
+          volumeMounts:
+          - mountPath: /opt/dist
+            name: data-static
+        restartPolicy: Always
+        volumes:
+        - name: data-static
+          persistentVolumeClaim:
+            claimName: data-static
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - frontend
+        from:
+          kind: ImageStreamTag
+          name: frontend:latest
+      type: ImageChange
+  status: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: frontend
+    name: frontend
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: nanocloud/frontend
+      generation: null
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: frontend
+    name: frontend
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: frontend:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: assets/
+      git:
+        ref: master
+        uri: https://github.com/patlachance/nanocloud.git
+      type: Git
+    strategy:
+      dockerStrategy:
+        dockerfilePath: Dockerfile
+      type: Docker
+    triggers:
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      volume.beta.kubernetes.io/storage-class: glusterfs-storage
+    creationTimestamp: null
+    labels:
+      io.kompose.service: data-static
+    name: data-static
+  spec:
+    accessModes:
+    - ReadWriteMany
+    resources:
+      requests:
+        storage: 100Mi
+  status: {}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: guacamole-client
+    name: guacamole-client
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: guacamole-client
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: guacamole-client
+      spec:
+        containers:
+        - image: ' '
+          name: guacamole-client
+          resources: {}
+        restartPolicy: Always
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - guacamole-client
+        from:
+          kind: ImageStreamTag
+          name: guacamole-client:latest
+      type: ImageChange
+  status: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: guacamole-client
+    name: guacamole-client
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: nanocloud/guacamole-client
+      generation: null
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: guacamole-client
+    name: guacamole-client
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: guacamole-client:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: guacamole-client/
+      git:
+        ref: master
+        uri: https://github.com/patlachance/nanocloud.git
+      type: Git
+    strategy:
+      dockerStrategy: {}
+      env:
+        - name: MAVEN_OPTS
+          value: >-
+            -Dhttp.proxyHost=webproxy.prd.lab-nxtit.priv -Dhttp.proxyPort=3128
+            -Dhttps.proxyHost=webproxy.prd.lab-nxtit.priv -Dhttps.proxyPort=3128
+            -Dhttp.nonProxyHosts=$no_proxy -Dhttps.nonProxyHosts=$no_proxy
+      type: Docker
+    triggers:
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: guacd
+    name: guacd
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: guacd
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: guacd
+      spec:
+        containers:
+        - image: ' '
+          name: guacd
+          resources: {}
+        restartPolicy: Always
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - guacd
+        from:
+          kind: ImageStreamTag
+          name: guacd:latest
+      type: ImageChange
+  status: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: guacd
+    name: guacd
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: nanocloud/guacd
+      generation: null
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: guacd
+    name: guacd
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: guacd:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: guacd/
+      git:
+        ref: master
+        uri: https://github.com/patlachance/nanocloud.git
+      type: Git
+    strategy:
+      dockerStrategy: {}
+      type: Docker
+    triggers:
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: plaza
+    name: plaza
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: plaza
+    strategy:
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: plaza
+      spec:
+        containers:
+        - env:
+          - name: GOARCH
+            value: amd64
+          - name: GOOS
+            value: linux
+          image: ' '
+          name: plaza
+          resources: {}
+          volumeMounts:
+          - mountPath: /go/src/github.com/Nanocloud/nanocloud/plaza/
+            name: data-plaza
+        restartPolicy: Always
+        volumes:
+        - name: data-plaza
+          persistentVolumeClaim:
+            claimName: data-plaza
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - plaza
+        from:
+          kind: ImageStreamTag
+          name: plaza:latest
+      type: ImageChange
+  status: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: plaza
+    name: plaza
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: nanocloud/plaza
+      generation: null
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: plaza
+    name: plaza
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: plaza:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: plaza/
+      git:
+        ref: master
+        uri: https://github.com/patlachance/nanocloud.git
+      type: Git
+    strategy:
+      dockerStrategy: {}
+      type: Docker
+    triggers:
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      volume.beta.kubernetes.io/storage-class: glusterfs-storage
+    creationTimestamp: null
+    labels:
+      io.kompose.service: data-plaza
+    name: data-plaza
+  spec:
+    accessModes:
+    - ReadWriteMany
+    resources:
+      requests:
+        storage: 100Mi
+  status: {}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: postgres
+    name: postgres
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: postgres
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: postgres
+      spec:
+        containers:
+        - env:
+          - name: PGDATA
+            value: /var/lib/postgresql/data/pgdata
+          - name: POSTGRES_USER
+            value: nanocloud
+          image: ' '
+          name: postgres
+          resources: {}
+        restartPolicy: Always
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgres
+        from:
+          kind: ImageStreamTag
+          name: postgres:9.5.3
+      type: ImageChange
+  status: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: postgres
+    name: postgres
+  spec: {}
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: proxy
+    name: proxy
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: proxy
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: proxy
+      spec:
+        containers:
+        - image: ' '
+          name: proxy
+          ports:
+          - containerPort: 80
+          - containerPort: 443
+          resources: {}
+        restartPolicy: Always
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - proxy
+        from:
+          kind: ImageStreamTag
+          name: proxy:latest
+      type: ImageChange
+  status: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: proxy
+    name: proxy
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: nanocloud/proxy
+      generation: null
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: proxy
+    name: proxy
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: proxy:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: proxy/
+      git:
+        ref: master
+        uri: https://github.com/patlachance/nanocloud.git
+      type: Git
+    strategy:
+      dockerStrategy: {}
+      type: Docker
+    triggers:
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: storage
+    name: storage
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: storage
+    strategy:
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: storage
+      spec:
+        containers:
+        - env:
+          - name: PLAZA_PORT
+            value: "9090"
+          image: ' '
+          name: storage
+          ports:
+          - containerPort: 445
+          - containerPort: 9090
+          resources: {}
+          volumeMounts:
+          - mountPath: /opt/plaza
+            name: data-plaza
+        restartPolicy: Always
+        volumes:
+        - name: data-plaza
+          persistentVolumeClaim:
+            claimName: data-plaza
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - storage
+        from:
+          kind: ImageStreamTag
+          name: storage:latest
+      type: ImageChange
+  status: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: storage
+    name: storage
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: nanocloud/storage
+      generation: null
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      kompose.cmd: /usr/local/bin/kompose convert --provider openshift --build build-config
+        -o template.yaml -f docker-compose.yml
+      kompose.version: 1.10.0 (8bb0907)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: storage
+    name: storage
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: storage:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: storage/
+      git:
+        ref: master
+        uri: https://github.com/patlachance/nanocloud.git
+      type: Git
+    strategy:
+      dockerStrategy: {}
+      type: Docker
+    triggers:
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+kind: List
+metadata: {}
+
