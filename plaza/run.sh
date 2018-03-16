@@ -8,7 +8,7 @@ _log() {
 
 _log "init script starting"
 
-_log "fixing /etc/passwd "
+_log "fixing /etc/passwd"
 if ! whoami &> /dev/null; then
   if [ -w /etc/passwd ]; then
   echo "${USER_NAME:-default}:x:$(id -u):0:${USER_NAME:-default}
@@ -29,3 +29,4 @@ cp $SRCDIR/install.sh /go/src/github.com/Nanocloud/nanocloud/plaza
 _log "building plaza executable on shared volume"
 ./build.sh
 
+exit $?
