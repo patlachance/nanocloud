@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SRCDIR=./
+SRCDIR=$PWD
 
 _log() {
   echo "--- '$*' ---"
