@@ -29,4 +29,5 @@ cp -a $SRCDIR/* /go/src/github.com/Nanocloud/nanocloud/plaza
 _log "building plaza executable on shared volume"
 ./build.sh
 
-exit $?
+_log "build exited with code '$?'"
+exit 0
