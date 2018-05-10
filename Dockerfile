@@ -19,6 +19,7 @@ EXPOSE 1337
 CMD pm2 start app.js -- --prod && pm2 logs
 
 # Openshift port
+ENV HOME $WORKDIR
 COPY uid_entrypoint /
 RUN chgrp -R 0 $WORKDIR && \
     chmod -R g=u $WORKDIR && \
