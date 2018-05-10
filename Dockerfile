@@ -15,3 +15,5 @@ COPY ./ /opt/back
 EXPOSE 1337
 
 CMD pm2 start app.js -- --prod && pm2 logs
+
+USER 1001
